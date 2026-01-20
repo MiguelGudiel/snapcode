@@ -19,7 +19,7 @@ Because I was too lazy to copy and paste a shitload of files just to give an AI 
 You need Python 3.8 or higher. No weird dependencies are required for the core app, as it uses the standard library.
 
 1. Clone the repository:
-   git clone https://github.com/yourusername/SnapCode.git
+   git clone https://github.com/MiguelGudiel/snapcode.git
 
 2. Enter the directory:
    cd SnapCode
