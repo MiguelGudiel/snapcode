@@ -1,0 +1,9 @@
+__pycache__/
+config_filetree.json
+
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
