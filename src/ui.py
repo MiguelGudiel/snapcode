@@ -1,3 +1,5 @@
+import subprocess
+import platform
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
@@ -71,6 +73,7 @@ class SnapCodeUI:
         scrolly.config(command=self.tree.yview)
         self.tree.heading("#0", text="Project Navigator", anchor=tk.W)
         self.tree.bind('<Button-1>', self.on_click)
+        self.tree.bind('<space>', lambda e: self.on_click(e, use_selection=True))
 
         # --- Footer Control Panel ---
         footer = tk.Frame(self.root, bg="#ddd")
@@ -184,11 +187,21 @@ class SnapCodeUI:
         
         output = formatters.format_output(data, self.combo_format.get(), self.include_path_var.get())
         
-        # Atomic clipboard operation
-        self.root.clipboard_clear()
-        self.root.clipboard_append(output)
-        self.root.update()
-        messagebox.showinfo("Success", f"Processed {len(data)} files.\nContext packed and ready for transport.\n\n✅ Paste with Ctrl + V")
+        try:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(output)
+            
+            # for macOS
+            self.root.update_idletasks() 
+            self.root.update()
+
+            if platform.system() == "Darwin":
+                process = subprocess.Popen(['pbcopy'], stdin=subprocess.PIPE, decode_stderr=True)
+                process.communicate(input=output.encode('utf-8'))
+
+            messagebox.showinfo("Success", f"Processed {len(data)} files.\nPaste with Command + V")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to copy to clipboard: {e}")
 
     def _on_close(self):
         # Save state before killing the process
